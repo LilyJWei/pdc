@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "804815848083",
+    "firebase_url": "https://pdcommunication-89332.firebaseio.com",
+    "project_id": "pdcommunication-89332",
+    "storage_bucket": "pdcommunication-89332.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:804815848083:android:2adef12ab13905d7",
+        "android_client_info": {
+          "package_name": "com.example.pdc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "804815848083-oqsiqj2k0i0n5qt6ve0543rk2g96bvr8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBaHT9nqZO-hCvdUdjs_4Pp95uu_2svKTc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "804815848083-oqsiqj2k0i0n5qt6ve0543rk2g96bvr8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "804815848083-3upcg2h5v3tftm9ee4cd5c4800kvqq5c.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "jiaxiu.wei.pdc"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
