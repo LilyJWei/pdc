@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pdc/Pages/QuestionDetail.dart';
 import 'package:pdc/Pages/SearchBar.dart';
 
 class QandAPage extends StatefulWidget {
@@ -77,26 +78,35 @@ class _QandAPageState extends State<QandAPage> with AutomaticKeepAliveClientMixi
                   child: new TabBarView(
                       children: tabs.map((Tab tab) {
                         return new ListView.builder(
+                          itemCount: 8,
                             itemBuilder: (BuildContext context, int index) {
                               return new Container(
                                 padding: EdgeInsets.only(left: 18),
                                 height: 50,
-                                child: new Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                      flex: 4,
-                                      child: Text('孩子总是贫血怎么办'),
+                                child: FlatButton(
+                                  padding: EdgeInsets.only(left: 0),
+                                    onPressed: (){
+                                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => QuestionDetailPage())) ;
+                                    //Navigator.push(context, MaterialPageRoute(builder: (context) => QuestionDetailPage()));
+                                    },
+                                    child: new Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          flex: 4,
+                                          child: Text('[' + tab.text +'] 我今天一直腰疼'),
+                                        ),
+                                        Expanded(
+                                          flex: 2,
+                                          child: Text('已解决'),
+                                        ),
+                                        Expanded(
+                                          flex: 2,
+                                          child: Text('21/4/2019'),
+                                        )
+                                      ],
                                     ),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Text('已解决'),
-                                    ),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Text('21/4/2019'),
-                                    )
-                                  ],
-                                ),
+                                )
+
                               );
                             });
                       }).toList()

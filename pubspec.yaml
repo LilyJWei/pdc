@@ -62,6 +62,10 @@ flutter:
   - images/icons/tab_chosenfollow.png
   - images/icons/tab_chosenMyInfo.png
   - images/icons/avatar1.jpg
+  - images/icons/avatar2.jpg
+  - images/icons/doctor.png
+  - images/icons/follow.png
+  - images/icons/Telephone.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

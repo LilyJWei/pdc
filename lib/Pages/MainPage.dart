@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pdc/Pages/SearchBar.dart';
+import 'package:pdc/Pages/Setup/signIn.dart';
+import 'package:pdc/TopicDetail.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -26,6 +28,7 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin{
         child: new Scaffold(
           appBar: AppBar(
             title: SearchBar(),
+            leading: null,
             backgroundColor: Colors.white,
             bottom: new TabBar(
               isScrollable: true,
@@ -43,7 +46,7 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin{
                 return new ListView.builder(
                   itemBuilder: (BuildContext context, int index) {
                     return new Container(
-                      height: 150,
+                      height: 160,
                       margin: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,19 +54,24 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin{
                           Expanded(
                             flex: 4,
                               child:Text(
-                            '今天腰疼很难受',
+                            '['+ tab.text + '] 今天腰疼很难受',
                             textAlign: TextAlign.left,
                             style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 69, 69, 92)),
                             maxLines: 1,
                           )),
                           Expanded(
                             flex: 10,
-                              child:Text(
-                            "九月初手臂划伤导致肌腱断裂四根，神经没有受伤，修复缝针后已经有四个多月，现在局部摸起来有点木,就是没有太大知觉，可以伸直弯曲",
-                            style: TextStyle(fontSize: 15, color: Color.fromARGB(255, 101, 104, 127)),
-                                textAlign: TextAlign.left,
-                                maxLines: 3,
-                          )),
+                              child:FlatButton(onPressed: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => TopicDetailPage()));
+                              },
+                                  padding: EdgeInsets.only(left: 2),
+                                  child: Text(
+                                    "九月初手臂划伤导致肌腱断裂四根，神经没有受伤，修复缝针后已经有四个多月，现在局部摸起来有点木,就是没有太大知觉，可以伸直弯曲",
+                                    style: TextStyle(fontSize: 15, color: Color.fromARGB(255, 101, 104, 127)),
+                                    textAlign: TextAlign.left,
+                                    maxLines: 3,
+                                  ))
+                              ),
                           Expanded(
                             flex: 0,
                               child: Row(
@@ -85,11 +93,14 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin{
                                   ),
                                   Expanded(
                                     flex: 2,
-                                      child: Icon(
-                                    Icons.comment,
-                                    size: 16,
-                                    color: Colors.black26,
-                                  )
+                                      child: IconButton(
+                                          icon: Icon(
+                                        Icons.comment,
+                                        size: 16,
+                                        color: Colors.black26,
+                                      ),
+                                      )
+
                                   ),
                                   Expanded(
                                     flex: 2,
@@ -127,6 +138,7 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin{
   }
 
   void search() {}
+
 
   @override
   // TODO: implement wantKeepAlive

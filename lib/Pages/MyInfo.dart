@@ -29,32 +29,35 @@ class _MyInfoPageState extends State<MyInfoPage> {
                     radius: 30,
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.only(left: 20, top: 10),
-                  child: Column(
-                    children: <Widget>[
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                        '我是小可爱',
-                        style: TextStyle(color: Color.fromARGB(255, 69, 69, 92), fontSize: 18 ),
-                      ) ,),
-                      Expanded(
-                        flex: 1,
-                        child:Text(
-                        '简介： 我是小可爱',
-                        style: TextStyle(color: Color.fromARGB(255, 101, 104, 127), fontSize: 12),
-                      ) ,),
-                    ],
+
+                  Container(
+                    margin: EdgeInsets.only(left: 20, top: 10),
+                    child: Column(
+                      children: <Widget>[
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            '我是小可爱',
+                            style: TextStyle(color: Color.fromARGB(255, 69, 69, 92), fontSize: 18 ),
+                          ) ,),
+                        Expanded(
+                          flex: 1,
+                          child:Text(
+                            '简介： 我是小可爱',
+                            style: TextStyle(color: Color.fromARGB(255, 101, 104, 127), fontSize: 12),
+                          ) ,),
+                      ],
+                    ),
                   ),
-                ),
-                Container(
+
+                Expanded(
+                  child: Container(
                   margin: EdgeInsets.only(left: 130),
                   child: IconButton(
-                      icon: Icon(Icons.edit),
-                      onPressed: null,
+                    icon: Icon(Icons.edit),
+                    onPressed: null,
                   ),
-                )
+                ),)
               ],
             ),
           ),
