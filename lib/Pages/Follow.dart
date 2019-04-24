@@ -101,7 +101,7 @@ class _FollowPageState extends State<FollowPage> {
       children: <Widget>[
         Container(
           child: CircleAvatar(
-            backgroundImage: AssetImage("images/icons/avatar1.jpg"),
+            backgroundImage: AssetImage("images/icons/doctor.png"),
             radius: 20,
           ),
 

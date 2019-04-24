@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pdc/Pages/QuestionDetail.dart';
 
 class DoctorDetailPage extends StatefulWidget {
   @override
@@ -17,8 +18,13 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
               Navigator.pop(context);
             }),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+      body:
+
+
+
+
+      Column(
+        //mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           //第一大行，王外科的个人简介
@@ -78,11 +84,78 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
                         icon: Image(image: AssetImage("images/icons/2x/follow.png"),
                           width: 80,
                           height: 90,),
-                        onPressed: null)
+                        onPressed: () {})
                 ),)
               ],
             ),
             ),
+          Container(
+            margin: EdgeInsets.only(left: 20),
+            child: Text('Ta的全部回答', style: TextStyle(color:Color.fromARGB(255, 101, 104, 127),
+                fontSize: 16,fontWeight: FontWeight.w500)),
+          ),
+          Container(
+            height: 2,
+            margin: EdgeInsets.only(bottom: 0),
+            child: Divider(
+              color: Colors.black26,
+            ),
+          ),
+
+          Container(
+            padding: EdgeInsets.only(left: 18,top: 0),
+            height: 23,
+            color: Color.fromARGB(255, 246, 241, 241),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  flex:3,
+                  child: Text('提问标题',style: TextStyle(
+                      color: Color.fromARGB(255, 145, 153, 185),
+                      fontSize: 14),),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Text('日期', style: TextStyle(
+                      color: Color.fromARGB(255, 145, 153, 185),
+                      fontSize: 14),),
+                )
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: 10,
+                itemBuilder: (BuildContext context, int index){
+              return new Container(
+                  padding: EdgeInsets.only(left: 18),
+                  height: 50,
+                  child: FlatButton(
+                    padding: EdgeInsets.only(left: 0),
+                    onPressed: (){
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => QuestionDetailPage())) ;
+                      //Navigator.push(context, MaterialPageRoute(builder: (context) => QuestionDetailPage()));
+                    },
+                    child: new Row(
+                      children: <Widget>[
+                        Expanded(
+                          flex: 4,
+                          child: Text('我今天一直腰疼', style: TextStyle(color: Color.fromARGB(255, 69, 69, 92),fontSize: 14),),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Text('21/4/2019',style: TextStyle(color: Color.fromARGB(255, 69, 69, 92),fontSize: 14, fontWeight: FontWeight.w300)),
+                        )
+                      ],
+                    ),
+                  )
+
+              );
+            }),
+          )
+
+
+
         ],
       ),
 

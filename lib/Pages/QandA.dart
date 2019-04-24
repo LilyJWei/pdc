@@ -93,15 +93,17 @@ class _QandAPageState extends State<QandAPage> with AutomaticKeepAliveClientMixi
                                       children: <Widget>[
                                         Expanded(
                                           flex: 4,
-                                          child: Text('[' + tab.text +'] 我今天一直腰疼'),
+                                          child: Text('[' + tab.text +'] 我今天一直腰疼', style: TextStyle(color: Color.fromARGB(255, 69, 69, 92),fontSize: 14)),
                                         ),
                                         Expanded(
                                           flex: 2,
-                                          child: Text('已解决'),
+                                          child: Text('已解决', style: TextStyle(color: Color.fromARGB(255, 69, 69, 92),fontSize: 14)),
                                         ),
                                         Expanded(
                                           flex: 2,
-                                          child: Text('21/4/2019'),
+                                          child: Text('21/4/2019', style: TextStyle(color: Color.fromARGB(255, 69, 69, 92),fontSize: 14,
+                                          fontWeight: FontWeight.w300
+                                          )),
                                         )
                                       ],
                                     ),
