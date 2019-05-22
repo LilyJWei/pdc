@@ -1,0 +1,10 @@
+最深灰：
+Color.fromARGB(255, 69, 69, 92)
+次深灰：
+Color.fromARGB(255, 101, 104, 127)
+浅灰：
+Color.fromARGB(255, 145, 153, 185)
+深粉：
+Color.fromARGB(255, 240, 123, 135)
+浅粉：
+Color.fromARGB(255, 249, 223, 221)

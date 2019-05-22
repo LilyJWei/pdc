@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pdc/Pages/Follow.dart';
 import 'package:pdc/Pages/MainPage.dart';
 import 'package:pdc/Pages/MyInfo.dart';
 import 'package:pdc/Pages/QandA.dart';
+
 
 class BottomNavigationBarPage extends StatefulWidget {
   @override

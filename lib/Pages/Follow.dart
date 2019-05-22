@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pdc/Pages/DoctorDetail.dart';
-import 'package:pdc/TopicDetail.dart';
+import 'package:pdc/Pages/TopicDetail.dart';
 
 class FollowPage extends StatefulWidget {
   @override

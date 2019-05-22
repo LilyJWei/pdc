@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pdc/Pages/SearchBar.dart';
 import 'package:pdc/Pages/Setup/signIn.dart';
-import 'package:pdc/TopicDetail.dart';
+import 'package:pdc/Pages/TopicDetail.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -20,6 +22,27 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin{
    new Tab(text: "妇产科"),
    new Tab(text: "其他"),
  ];
+ 
+ String ReadableTime(String timestamp) {
+   List<String> timeList = timestamp.split(" ");
+   List<String> times = timeList[1].split(":");
+   String time;
+   if (new DateTime.now().toString().split(" ")[0] == timeList[0]) {
+     if (int.parse(times[0]) < 6) {
+       time = "凌晨${times[0]}:${times[1]}";
+     } else if (int.parse(times[0]) < 12) {
+       time = "上午${times[0]}:${times[1]}";
+     } else if (int.parse(times[0]) == 12) {
+       time = "中午${times[0]}:${times[1]}";
+     } else {
+       time =
+       "下午${(int.parse(times[0])- 12).toString().padLeft(2,'0')}:${times[1]}";
+     }
+   } else {
+     time = timeList[0];
+   }
+   return time;
+ }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +51,7 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin{
         child: new Scaffold(
           appBar: AppBar(
             title: SearchBar(),
-            leading: null,
+            automaticallyImplyLeading: false,
             backgroundColor: Colors.white,
             bottom: new TabBar(
               isScrollable: true,
@@ -43,92 +66,113 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin{
           ),
           body: new TabBarView(
               children: tabs.map((Tab tab){
-                return new ListView.builder(
-                  itemBuilder: (BuildContext context, int index) {
-                    return new Container(
-                      height: 160,
-                      margin: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Expanded(
-                            flex: 4,
-                              child:Text(
-                            '['+ tab.text + '] 今天腰疼很难受',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 69, 69, 92)),
-                            maxLines: 1,
-                          )),
-                          Expanded(
-                            flex: 10,
-                              child:FlatButton(onPressed: (){
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => TopicDetailPage()));
-                              },
-                                  padding: EdgeInsets.only(left: 2),
-                                  child: Text(
-                                    "九月初手臂划伤导致肌腱断裂四根，神经没有受伤，修复缝针后已经有四个多月，现在局部摸起来有点木,就是没有太大知觉，可以伸直弯曲",
-                                    style: TextStyle(fontSize: 15, color: Color.fromARGB(255, 101, 104, 127)),
-                                    textAlign: TextAlign.left,
-                                    maxLines: 3,
-                                  ))
-                              ),
-                          Expanded(
-                            flex: 0,
-                              child: Row(
-                                children: <Widget>[
-                                  Expanded(
-                                      flex: 2,
-                                      child: CircleAvatar(
-                                        backgroundImage: AssetImage("images/icons/Oval.png"),
-                                        radius: 15.0,
-                                      )
-                                  ),
-                                  Expanded(
-                                      flex: 5,
-                                      child: Text("长颈鹿好萌", style: TextStyle(color: Color.fromARGB(255, 145, 153, 185), fontSize: 13),)
-                                  ),
-                                  Expanded(
-                                    flex: 6,
-                                      child: Text("12/4/2019", style: TextStyle(color: Color.fromARGB(255, 145, 153, 185), fontSize: 13))
-                                  ),
-                                  Expanded(
-                                    flex: 2,
-                                      child: IconButton(
-                                          icon: Icon(
-                                        Icons.comment,
-                                        size: 16,
-                                        color: Colors.black26,
-                                      ),
-                                      )
+                return StreamBuilder(
+                  stream: Firestore.instance.collection('Topic').document('alltopic').collection(tab.text).snapshots(),
+                  builder: (context, snapshot){
+                    if(!snapshot.hasData){
+                      return const Text("Loading....");
+                    }else{
+                      return new ListView.builder(
+                        itemCount: snapshot.data.documents.length,
+                        itemBuilder: (BuildContext context, int index) {
 
-                                  ),
-                                  Expanded(
-                                    flex: 2,
-                                      child: Text("35", style: TextStyle(color: Color.fromARGB(255, 145, 153, 185), fontSize: 13))
-                                  ),
-                                  Expanded(
-                                    flex: 2,
-                                      child:  Icon(
-                                    Icons.remove_red_eye,
-                                    size: 16,
-                                    color: Colors.black26,
-                                  )
-                                  ),
-                                  Expanded(
-                                      flex: 2,
-                                      child: Text("1234", style: TextStyle(color: Color.fromARGB(255, 145, 153, 185), fontSize: 13))
-                                  ),
+                          DocumentSnapshot document = snapshot.data.documents[index];
+                          return new Container(
+                            height: 160,
+                            margin: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Expanded(
+                                    flex: 4,
+                                    child:Text(
+                                      '['+ tab.text + '] ' + document['title'],
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 69, 69, 92)),
+                                      maxLines: 1,
+                                    )),
+                                Expanded(
+                                    flex: 10,
+                                    child:FlatButton(onPressed: (){
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => TopicDetailPage(snap:document, tabs: tab)));
+                                      Firestore.instance.runTransaction((transaction) async {
+                                        DocumentSnapshot freshSnap = await transaction.get(document.reference);
+                                        await transaction.update(freshSnap.reference, {
+                                          'view': freshSnap['view'] + 1
+                                        });
+                                      });
+                                    },
+                                        padding: EdgeInsets.only(left: 2),
+                                        child: Text(
+                                          document['content'],
+                                          style: TextStyle(fontSize: 15, color: Color.fromARGB(255, 101, 104, 127)),
+                                          textAlign: TextAlign.left,
+                                          maxLines: 3,
+                                        ))
+                                ),
+                                Expanded(
+                                    flex: 0,
+                                    child: Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                            flex: 2,
+                                            child: CircleAvatar(
+                                              backgroundImage:NetworkImage(document['photoUrl']),
+                                              radius: 15.0,
+                                            )
+                                        ),
+                                        Expanded(
+                                            flex: 5,
+                                            child: Text(document['username'], style: TextStyle(color: Color.fromARGB(255, 145, 153, 185), fontSize: 13),)
+                                        ),
+                                        Expanded(
+                                            flex: 6,
+                                            child: Text(ReadableTime(document['time'].toDate().toString()), style: TextStyle(color: Color.fromARGB(255, 145, 153, 185), fontSize: 13))
+                                        ),
+                                        Expanded(
+                                            flex: 2,
+                                            child: IconButton(
+                                              icon: Icon(
+                                                Icons.comment,
+                                                size: 16,
+                                                color: Colors.black26,
+                                              ),
+                                            )
 
-                                ],
-                              )
-                          ),
-                          Divider(
-                            color: Colors.black26,
-                          )
-                        ],
-                      ),
-                    );
-                  },
+                                        ),
+                                        Expanded(
+                                            flex: 2,
+                                            child: Text(document['comment'].toString(), style: TextStyle(color: Color.fromARGB(255, 145, 153, 185), fontSize: 13))
+                                        ),
+                                        Expanded(
+                                            flex: 2,
+                                            child:  Icon(
+                                              Icons.remove_red_eye,
+                                              size: 16,
+                                              color: Colors.black26,
+                                            )
+                                        ),
+                                        Expanded(
+                                            flex: 2,
+
+                                            child: Text(document['view'].toString(), style: TextStyle(color: Color.fromARGB(255, 145, 153, 185), fontSize: 13))
+
+                                        ),
+
+                                      ],
+                                    )
+                                ),
+                                Divider(
+                                  color: Colors.black26,
+                                )
+                              ],
+                            ),
+                          );
+                        },
+
+                      );
+                    }
+                  }
 
                 );
           }).toList()

@@ -28,7 +28,7 @@ class _QandAPageState extends State<QandAPage> with AutomaticKeepAliveClientMixi
   @override
   Widget build(BuildContext context) {
     return new DefaultTabController(
-        length: 10,
+        length: tabs.length,
         child: new Scaffold(
             appBar: AppBar(
               elevation: 1,
