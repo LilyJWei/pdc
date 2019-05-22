@@ -3,10 +3,6 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:pdc/Pages/MyInfo.dart';
-import 'package:pdc/Pages/Setup/signIn.dart';
 
 class CrudMedthods {
   bool isLoggedIn() {
@@ -38,6 +34,27 @@ class CrudMedthods {
           .where('displayName',isEqualTo: name)
           .getDocuments();
 
+  }
+
+  String ReadableTime(String timestamp) {
+    List<String> timeList = timestamp.split(" ");
+    List<String> times = timeList[1].split(":");
+    String time;
+    if (new DateTime.now().toString().split(" ")[0] == timeList[0]) {
+      if (int.parse(times[0]) < 6) {
+        time = "凌晨${times[0]}:${times[1]}";
+      } else if (int.parse(times[0]) < 12) {
+        time = "上午${times[0]}:${times[1]}";
+      } else if (int.parse(times[0]) == 12) {
+        time = "中午${times[0]}:${times[1]}";
+      } else {
+        time =
+        "下午${(int.parse(times[0])- 12).toString().padLeft(2,'0')}:${times[1]}";
+      }
+    } else {
+      time = timeList[0];
+    }
+    return time;
   }
 
 

@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pdc/Pages/QuestionDetail.dart';
 import 'package:pdc/Pages/SearchBar.dart';
+import 'package:pdc/Pages/Setup/crud.dart';
 
 class QandAPage extends StatefulWidget {
   @override
@@ -34,6 +36,7 @@ class _QandAPageState extends State<QandAPage> with AutomaticKeepAliveClientMixi
               elevation: 1,
               title: SearchBar(),
               backgroundColor: Colors.white,
+              automaticallyImplyLeading: false,
 
               bottom: new TabBar(
                 isScrollable: true,
@@ -77,40 +80,52 @@ class _QandAPageState extends State<QandAPage> with AutomaticKeepAliveClientMixi
                   flex: 18,
                   child: new TabBarView(
                       children: tabs.map((Tab tab) {
-                        return new ListView.builder(
-                          itemCount: 8,
-                            itemBuilder: (BuildContext context, int index) {
-                              return new Container(
-                                padding: EdgeInsets.only(left: 18),
-                                height: 50,
-                                child: FlatButton(
-                                  padding: EdgeInsets.only(left: 0),
-                                    onPressed: (){
-                                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => QuestionDetailPage())) ;
-                                    //Navigator.push(context, MaterialPageRoute(builder: (context) => QuestionDetailPage()));
-                                    },
-                                    child: new Row(
-                                      children: <Widget>[
-                                        Expanded(
-                                          flex: 4,
-                                          child: Text('[' + tab.text +'] 我今天一直腰疼', style: TextStyle(color: Color.fromARGB(255, 69, 69, 92),fontSize: 14)),
-                                        ),
-                                        Expanded(
-                                          flex: 2,
-                                          child: Text('已解决', style: TextStyle(color: Color.fromARGB(255, 69, 69, 92),fontSize: 14)),
-                                        ),
-                                        Expanded(
-                                          flex: 2,
-                                          child: Text('21/4/2019', style: TextStyle(color: Color.fromARGB(255, 69, 69, 92),fontSize: 14,
-                                          fontWeight: FontWeight.w300
-                                          )),
+                        return StreamBuilder(
+                          stream: Firestore.instance.collection('Questions').document('alltopic')
+                            .collection(tab.text).snapshots(),
+                          builder: (context, snapshot) {
+                            if(!snapshot.hasData){
+                              return const Text('Loading....');
+                            }else{
+                              return new ListView.builder(
+                                  itemCount: snapshot.data.documents.length,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    DocumentSnapshot document = snapshot.data.documents[index];
+                                    return new Container(
+                                        padding: EdgeInsets.only(left: 18),
+                                        height: 50,
+                                        child: FlatButton(
+                                          padding: EdgeInsets.only(left: 0),
+                                          onPressed: (){
+                                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => QuestionDetailPage(snap: document, tabs: tab))) ;
+                                            //Navigator.push(context, MaterialPageRoute(builder: (context) => QuestionDetailPage()));
+                                          },
+                                          child: new Row(
+                                            children: <Widget>[
+                                              Expanded(
+                                                flex: 4,
+                                                child: Text( document['title'], style: TextStyle(color: Color.fromARGB(255, 69, 69, 92),fontSize: 14)),
+                                              ),
+                                              Expanded(
+                                                flex: 2,
+                                                child: Text(document['status'], style: TextStyle(color: Color.fromARGB(255, 69, 69, 92),fontSize: 14)),
+                                              ),
+                                              Expanded(
+                                                flex: 2,
+                                                child: Text(CrudMedthods().ReadableTime(document['time'].toDate().toString()), style: TextStyle(color: Color.fromARGB(255, 69, 69, 92),fontSize: 14,
+                                                    fontWeight: FontWeight.w300
+                                                )),
+                                              )
+                                            ],
+                                          ),
                                         )
-                                      ],
-                                    ),
-                                )
 
-                              );
-                            });
+                                    );
+                                  });
+                            }
+
+                          }
+                        );
                       }).toList()
                   ),)
               ],

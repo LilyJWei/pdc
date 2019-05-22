@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pdc/Pages/Setup/TopicManagement.dart';
 
 class PublishTopicPage extends StatefulWidget {
   @override
@@ -76,6 +77,7 @@ class _PublishTopicPageState extends State<PublishTopicPage> {
             tooltip: '发布',
             onPressed: () {
               // handle the press
+              publish(_title, _content);
             },
           ),
         ],
@@ -258,14 +260,35 @@ class _PublishTopicPageState extends State<PublishTopicPage> {
   }
 
   publish(String title, String content){
-    //select type
-    if(groupValue == 1){
-      _selectedType = 'Topics';
+    if(groupValue == 0 || selectItemValue == null || title == null || content == null){
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('提示'),
+            content: Text(('请正确输入全部内容')),
+            actions: <Widget>[
+              new FlatButton(
+                child: new Text("确定"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ));
     }else{
-      _selectedType = 'Questions';
+      //select Tabs
+      _selectedTab = selectItemValue;
+      //select type
+      if(groupValue == 1){
+        _selectedType = 'Topic';
+        TopicManagement().storeNewTopic(_selectedType, _selectedTab, title, content,context);
+      }else{
+        _selectedType = 'Questions';
+        TopicManagement().storeNewQuestion(_selectedType, _selectedTab, title, content,context);
+      }
+
+
     }
-    //select Tabs
-    _selectedTab = selectItemValue;
 
   }
 }

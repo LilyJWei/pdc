@@ -254,9 +254,9 @@ class _SignUpPageState extends State<SignUpPage> {
         //get gender
         if(genderValue != null){
           if(genderValue == 1){
-            gender = 'male';
+            gender = '男';
           }else{
-            gender = 'female';
+            gender = '女';
           }
         }else{
           gender = 'undifine';

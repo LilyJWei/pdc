@@ -86,7 +86,7 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin{
                                 Expanded(
                                     flex: 4,
                                     child:Text(
-                                      '['+ tab.text + '] ' + document['title'],
+                                      document['title'],
                                       textAlign: TextAlign.left,
                                       style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 69, 69, 92)),
                                       maxLines: 1,

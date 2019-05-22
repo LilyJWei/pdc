@@ -85,7 +85,8 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                                                 Container(
                                                   margin: EdgeInsets.only(left: 15, right: 15, top: 10),
                                                   child: CircleAvatar(
-                                                    backgroundImage: AssetImage("images/icons/avatar2.jpg"),
+                                                    backgroundImage: index == 0? NetworkImage(snap['photoUrl'])
+                                                    : NetworkImage(document['photoUrl']),
                                                     radius: 15,
                                                   ),
                                                 ),
@@ -300,7 +301,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                        textAlign: TextAlign.start,
                      ),
                      onPressed: (){
-                       Navigator.push(context, MaterialPageRoute(builder: (context) => CommentPage()));
+                       Navigator.push(context, MaterialPageRoute(builder: (context) => CommentPage(tab: tabText, id: docId)));
                      },
                    )
                    
