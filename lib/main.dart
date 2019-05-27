@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pdc/Pages/BottomNavigationBar.dart';
 import 'package:pdc/Pages/MainPage.dart';
@@ -6,7 +7,8 @@ import 'package:pdc/Pages/Setup/signIn.dart';
 import 'Pages/Setup/Welcome.dart';
 
 
-void main() => runApp(MyApp());
+void main()=>runApp(MyApp());
+
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pdc/Pages/QuestionDetail.dart';
+import 'package:pdc/Pages/QuestionDetailDoctor.dart';
 import 'package:pdc/Pages/SearchBar.dart';
 import 'package:pdc/Pages/Setup/crud.dart';
 
@@ -97,7 +99,20 @@ class _QandAPageState extends State<QandAPage> with AutomaticKeepAliveClientMixi
                                         child: FlatButton(
                                           padding: EdgeInsets.only(left: 0),
                                           onPressed: (){
-                                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => QuestionDetailPage(snap: document, tabs: tab))) ;
+                                            FirebaseAuth.instance.currentUser().then((user){
+                                              Firestore.instance.collection('users').where('uid',isEqualTo: user.uid)
+                                                  .getDocuments().then((doc){
+                                                 DocumentSnapshot snap = doc.documents[0];
+                                                 if(snap['avatar'] == 'doctor'){
+                                                   Navigator.of(context).push(MaterialPageRoute
+                                                     (builder: (context) => QuestionDetailDoctorPage(snap: document, tabs: tab))) ;
+                                                 }else{
+                                                   Navigator.of(context).push(
+                                                       MaterialPageRoute(builder: (context) => QuestionDetailPage(snap: document, tabs: tab.text))) ;
+                                                 }
+                                              });
+                                            });
+
                                             //Navigator.push(context, MaterialPageRoute(builder: (context) => QuestionDetailPage()));
                                           },
                                           child: new Row(
@@ -112,7 +127,7 @@ class _QandAPageState extends State<QandAPage> with AutomaticKeepAliveClientMixi
                                               ),
                                               Expanded(
                                                 flex: 2,
-                                                child: Text(CrudMedthods().ReadableTime(document['time'].toDate().toString()), style: TextStyle(color: Color.fromARGB(255, 69, 69, 92),fontSize: 14,
+                                                child: Text(CrudMethods().ReadableTime(document['time'].toDate().toString()), style: TextStyle(color: Color.fromARGB(255, 69, 69, 92),fontSize: 14,
                                                     fontWeight: FontWeight.w300
                                                 )),
                                               )

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:pdc/Pages/DoctorDetail.dart';
 import 'package:pdc/Pages/Setup/crud.dart';
 
 class QuestionDetailPage extends StatefulWidget {
   const QuestionDetailPage({Key key, this.snap,this.tabs}) : super(key: key);
   final DocumentSnapshot snap;
-  final Tab tabs;
+  final String tabs;
   @override
   _QuestionDetailPageState createState() => _QuestionDetailPageState();
 }
@@ -15,7 +16,7 @@ class _QuestionDetailPageState extends State<QuestionDetailPage> {
   @override
   Widget build(BuildContext context) {
     //当前问题的类别
-    String tabText = widget.tabs.text;
+    String tabText = widget.tabs;
     DocumentSnapshot snap = widget.snap;
     String docId = snap.documentID;
     return Scaffold(
@@ -59,7 +60,7 @@ class _QuestionDetailPageState extends State<QuestionDetailPage> {
                         ),
                         Expanded(
                           flex: 2,
-                          child: Text(CrudMedthods().ReadableTime(snap['time'].toDate().toString()),style: TextStyle(color:Color.fromARGB(255, 145, 153, 185),
+                          child: Text(CrudMethods().ReadableTime(snap['time'].toDate().toString()),style: TextStyle(color:Color.fromARGB(255, 145, 153, 185),
                             fontSize: 12),),
                         )
                       ],
@@ -91,54 +92,66 @@ class _QuestionDetailPageState extends State<QuestionDetailPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Container(
-                              child: Row(
-                                children: <Widget>[
-                                  Container(
-                                    height:40,
-                                    width:40,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(1.0),
-                                      child: Image.network(document['photoUrl']),
-                                    ),
-                                  ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Row(
-                                        children: <Widget>[
-                                          Container(
-                                            margin: EdgeInsets.only(left: 15,right: 35),
-                                            child: Text(document['username'],style: TextStyle(color:Color.fromARGB(255, 101, 104, 127),
-                                                fontSize: 16,fontWeight: FontWeight.w500),),
-                                          ),
-                                          Container(
-                                            child: Text('职称：' + document['technicaltitle'],
-                                              style: TextStyle(color: Color.fromARGB(255, 101, 104, 127),fontSize: 12),),
-                                          )
-                                        ],
+                            FlatButton(
+                              child: Container(
+                                child: Row(
+                                  children: <Widget>[
+                                    Container(
+                                      height:45,
+                                      width:45,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(1.0),
+                                        child: Image.network(document['photoUrl']),
                                       ),
-                                      Container(
-                                        margin: EdgeInsets.only(left: 15),
-                                        child: Text('专长：' + document['speciality'],
-                                          style:TextStyle(color: Color.fromARGB(255, 101, 104, 127),fontSize: 12) ,),
-                                      )
-                                    ],
-                                  ),
-                                  Expanded(
-                                    child: Container(
-                                      height: 87,
-                                      width: 80,
-                                      margin: EdgeInsets.only(left: 50,right: 10),
-                                      child: IconButton(icon: Image(image: AssetImage("images/icons/3x/follow.png"),width: 87,height: 123,), onPressed: null),
-                                    ),)
+                                    ),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Row(
+                                          children: <Widget>[
+                                            Container(
+                                              margin: EdgeInsets.only(left: 15,right: 35),
+                                              child: Text(document['username'],style: TextStyle(color:Color.fromARGB(255, 101, 104, 127),
+                                                  fontSize: 16,fontWeight: FontWeight.w500),),
+                                            ),
+                                            Container(
+                                              child: Text('职称：' + document['technicaltitle'],
+                                                style: TextStyle(color: Color.fromARGB(255, 101, 104, 127),fontSize: 12),),
+                                            )
+                                          ],
+                                        ),
+                                        Container(
+                                          margin: EdgeInsets.only(left: 15),
+                                          child: Text('专长：' + document['speciality'],
+                                            style:TextStyle(color: Color.fromARGB(255, 101, 104, 127),fontSize: 12) ,),
+                                        )
+                                      ],
+                                    ),
+                                  //加关注
+//                                  Expanded(
+//                                    child: Container(
+//                                      height: 87,
+//                                      width: 80,
+//                                      margin: EdgeInsets.only(left: 50,right: 10),
+//                                      child: IconButton(icon: Image(image: AssetImage("images/icons/3x/follow.png"),width: 87,height: 123,), onPressed: null),
+//                                    ),)
 
-                                ],
+                                  ],
+                                ),
                               ),
+                              onPressed: (){
+                                //find the answering doctor
+                                Firestore.instance.collection('users').where('uid', isEqualTo: document['uid'])
+                                .getDocuments().then((docs){
+                                  DocumentSnapshot doctorSnap = docs.documents[0];
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>DoctorDetailPage(doctorSnap: doctorSnap)));
+                                });
+
+                              },
                             ),
                             Container(
                               // margin: EdgeInsets.only(left: 20,right: 20,top: 5),
-                              child: Text('你这种情况应该是坐的时间太长了，你需要多活动活动，如果还是很疼的话建议来医院看看',
+                              child: Text(document['content'],
                                 style: TextStyle(color:Color.fromARGB(255, 101, 104, 127),fontSize: 15,),),
                             )
                           ],

@@ -83,125 +83,101 @@ class _PublishTopicPageState extends State<PublishTopicPage> {
         ],
       ),
 
-       body: SingleChildScrollView(
-         child: Container(
-            //color: Colors.black26,
-            height: 700,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(left: 30,top: 5, bottom: 5),
-                  child: Text(
-                    "请选择发布类型：",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(color: Color.fromARGB(255, 69, 69, 92),fontSize: 16),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(left: 30, bottom: 5,right: 30),
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        height: 50,
-                        width: 150,
-                        padding: EdgeInsets.all(0),
-                        child: RadioListTile<int>(
-                            title: Text('帖子',
-                                style: TextStyle(color: Color.fromARGB(255, 69, 69, 92),
-                                    fontSize: 16,fontWeight: FontWeight.w500)),
-                            value: 1,
-                            groupValue: groupValue,
-                            onChanged: (int e)=>updateGroupValue(e),
-                            activeColor: Color.fromARGB(255, 240, 123, 135)
-                        ),
-                      ),
-                      Container(
-                        height: 50,
-                        width: 150,
-                        child: RadioListTile<int>(
-                            title: const Text('问题',
-                                style: TextStyle(
-                                    color: Color.fromARGB(255, 69, 69, 92),
-                                    fontSize: 16,fontWeight: FontWeight.w500)
-                            ),
-                            value: 2,
-                            groupValue: groupValue,
-                            onChanged: (int e)=>updateGroupValue(e),
-                            activeColor: Color.fromARGB(255, 240, 123, 135)
-                        ),
-                      ),
-
-
-                    ],
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(left: 30,top: 5,bottom: 5),
-                  child: Text(
-                    "请选择疾病标签：",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(color: Color.fromARGB(255, 69, 69, 92),fontSize: 16),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(left: 30),
-                  child: new DropdownButton(
-                    elevation: 2,
-                    hint: new Text('     选择疾病类别      '),
-                    value: selectItemValue,
-                    items: generateItemList(),
-                    onChanged: (T){
-                      setState(() {
-                        selectItemValue=T;
-                      });
-                    },
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(left: 30,top: 5),
-                  child: Text(
-                    "题目：",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(color: Color.fromARGB(255, 69, 69, 92),fontSize: 18,fontWeight: FontWeight.w500),
-                  ),
-                ),
-                Container(
-                    margin: EdgeInsets.only(left: 30,right: 30,bottom: 5, top: 5),
-                    child: Theme(
-                      data: new ThemeData(primaryColor: Color.fromARGB(255, 240, 123, 135), hintColor:Color.fromARGB(255, 249, 223, 221) ),
-                      child: TextField(
-                        maxLines: 1,
-                        decoration: InputDecoration(
-                            contentPadding: EdgeInsets.all(10.0),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            )),
-                        onChanged: (value){
-                          setState(() {
-                            _title = value;
-                          });
-                        },
-                      ),
+       body: GestureDetector(
+           behavior: HitTestBehavior.translucent,
+           onTap: () {
+             // 触摸收起键盘
+             FocusScope.of(context).requestFocus(FocusNode());
+           },
+         child: SingleChildScrollView(
+           child: Container(
+              //color: Colors.black26,
+              height: 700,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(left: 30,top: 5, bottom: 5),
+                    child: Text(
+                      "请选择发布类型：",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(color: Color.fromARGB(255, 69, 69, 92),fontSize: 16),
                     ),
-
-                ),
-                Container(
-                  margin: EdgeInsets.only(left: 30,top: 5),
-                  child: Text(
-                    "内容：",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(color: Color.fromARGB(255, 69, 69, 92),fontSize: 18,fontWeight: FontWeight.w500),
                   ),
-                ),
-                Expanded(
-                  flex: 10,
-                  child: Container(
+                  Container(
+                    margin: EdgeInsets.only(left: 30, bottom: 5,right: 30),
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          height: 50,
+                          width: 150,
+                          padding: EdgeInsets.all(0),
+                          child: RadioListTile<int>(
+                              title: Text('帖子',
+                                  style: TextStyle(color: Color.fromARGB(255, 69, 69, 92),
+                                      fontSize: 16,fontWeight: FontWeight.w500)),
+                              value: 1,
+                              groupValue: groupValue,
+                              onChanged: (int e)=>updateGroupValue(e),
+                              activeColor: Color.fromARGB(255, 240, 123, 135)
+                          ),
+                        ),
+                        Container(
+                          height: 50,
+                          width: 150,
+                          child: RadioListTile<int>(
+                              title: const Text('问题',
+                                  style: TextStyle(
+                                      color: Color.fromARGB(255, 69, 69, 92),
+                                      fontSize: 16,fontWeight: FontWeight.w500)
+                              ),
+                              value: 2,
+                              groupValue: groupValue,
+                              onChanged: (int e)=>updateGroupValue(e),
+                              activeColor: Color.fromARGB(255, 240, 123, 135)
+                          ),
+                        ),
+
+
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(left: 30,top: 5,bottom: 5),
+                    child: Text(
+                      "请选择疾病标签：",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(color: Color.fromARGB(255, 69, 69, 92),fontSize: 16),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(left: 30),
+                    child: new DropdownButton(
+                      elevation: 2,
+                      hint: new Text('     选择疾病类别      '),
+                      value: selectItemValue,
+                      items: generateItemList(),
+                      onChanged: (T){
+                        setState(() {
+                          selectItemValue=T;
+                        });
+                      },
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(left: 30,top: 5),
+                    child: Text(
+                      "题目：",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(color: Color.fromARGB(255, 69, 69, 92),fontSize: 18,fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                  Container(
                       margin: EdgeInsets.only(left: 30,right: 30,bottom: 5, top: 5),
                       child: Theme(
                         data: new ThemeData(primaryColor: Color.fromARGB(255, 240, 123, 135), hintColor:Color.fromARGB(255, 249, 223, 221) ),
                         child: TextField(
-                          maxLines: 15,
+                          maxLines: 1,
                           decoration: InputDecoration(
                               contentPadding: EdgeInsets.all(10.0),
                               border: OutlineInputBorder(
@@ -209,17 +185,48 @@ class _PublishTopicPageState extends State<PublishTopicPage> {
                               )),
                           onChanged: (value){
                             setState(() {
-                              _content = value;
+                              _title = value;
                             });
                           },
                         ),
                       ),
-                  ),
-                ),
 
-              ],
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(left: 30,top: 5),
+                    child: Text(
+                      "内容：",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(color: Color.fromARGB(255, 69, 69, 92),fontSize: 18,fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 10,
+                    child: Container(
+                        margin: EdgeInsets.only(left: 30,right: 30,bottom: 5, top: 5),
+                        child: Theme(
+                          data: new ThemeData(primaryColor: Color.fromARGB(255, 240, 123, 135), hintColor:Color.fromARGB(255, 249, 223, 221) ),
+                          child: TextField(
+                            maxLines: 15,
+                            decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(10.0),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                )),
+                            onChanged: (value){
+                              setState(() {
+                                _content = value;
+                              });
+                            },
+                          ),
+                        ),
+                    ),
+                  ),
+
+                ],
+              ),
             ),
-          ),
+         ),
        ),
 
 

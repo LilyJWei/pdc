@@ -42,7 +42,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
               elevation: 0,
             ),
             body: FutureBuilder<Object>(
-              future: CrudMedthods().getData(),
+              future: CrudMethods().getData(),
               builder: (context, AsyncSnapshot snapshot) {
                 if(snapshot.hasData){
                   DocumentSnapshot me = snapshot.data.documents[0];

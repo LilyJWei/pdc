@@ -71,6 +71,8 @@ flutter:
   - images/icons/follow.png
   - images/icons/Telephone.png
   - images/icons/publish.png
+  - images/icons/hasFollowed.png
+  - images/icons/2x/hasFollowed.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

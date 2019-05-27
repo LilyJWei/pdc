@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pdc/Pages/SearchBar.dart';
+import 'package:pdc/Pages/Setup/crud.dart';
 import 'package:pdc/Pages/Setup/signIn.dart';
 import 'package:pdc/Pages/TopicDetail.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -93,8 +95,9 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin{
                                     )),
                                 Expanded(
                                     flex: 10,
-                                    child:FlatButton(onPressed: (){
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => TopicDetailPage(snap:document, tabs: tab)));
+                                    child:FlatButton(onPressed: () async{
+
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => TopicDetailPage(snap:document, tabs: tab.text)));
                                       Firestore.instance.runTransaction((transaction) async {
                                         DocumentSnapshot freshSnap = await transaction.get(document.reference);
                                         await transaction.update(freshSnap.reference, {

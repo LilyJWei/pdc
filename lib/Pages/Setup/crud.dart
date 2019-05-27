@@ -4,7 +4,13 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class CrudMedthods {
+class CrudMethods {
+  final _firebaseAuth = FirebaseAuth.instance;
+
+  Stream<String> get onAuthStateChanged{
+    return _firebaseAuth.onAuthStateChanged.map((FirebaseUser user) => user?.uid);
+  }
+
   bool isLoggedIn() {
     if (FirebaseAuth.instance.currentUser() != null) {
       return true;
@@ -17,11 +23,6 @@ class CrudMedthods {
       return await FirebaseAuth.instance.currentUser();
 }
     getData() async{
-//    return FirebaseAuth.instance.currentUser().then((user){
-//      Firestore.instance.collection('users')
-//          .where('uid',isEqualTo: user.uid)
-//          .getDocuments();
-//      });
     FirebaseUser user  = await FirebaseAuth.instance.currentUser();
       return Firestore.instance.collection('users')
             .where('uid',isEqualTo: user.uid)
@@ -29,10 +30,22 @@ class CrudMedthods {
 
     }
 
-   testgetData(String name) {
-    return Firestore.instance.collection('users')
-          .where('displayName',isEqualTo: name)
-          .getDocuments();
+    getFollow(String documentId) async{
+      FirebaseUser user  = await FirebaseAuth.instance.currentUser();
+       QuerySnapshot doc = await Firestore.instance.collection('users').where('uid', isEqualTo: user.uid).getDocuments();
+       //print('1');
+       return Firestore.instance.collection('users').document(doc.documents[0].documentID)
+              .collection('Follow')
+           .where('topicid',isEqualTo: documentId).getDocuments();
+
+
+    }
+
+  getFollowDoctor() async{
+    FirebaseUser user  = await FirebaseAuth.instance.currentUser();
+    QuerySnapshot doc = await Firestore.instance.collection('users').where('uid', isEqualTo: user.uid).getDocuments();
+    return Firestore.instance.collection('users').document(doc.documents[0].documentID)
+        .collection('Doctor').getDocuments();
 
   }
 
@@ -57,6 +70,20 @@ class CrudMedthods {
     return time;
   }
 
+  DocumentSnapshot findTopic(DocumentSnapshot snap) {
+    DocumentSnapshot documentSnapshot;
+    Firestore.instance.collection('Topic').document('alltopic').collection(snap['tab']).getDocuments().then((doc){
+      doc.documents.forEach((document){
+        if(document.documentID == snap['topicid']){
+          print('find');
+          print(document);
+          documentSnapshot = document;
+          return documentSnapshot;
+        }
+      });
+    });
+    return documentSnapshot;
+  }
 
 
 }

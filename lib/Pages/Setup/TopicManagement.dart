@@ -90,4 +90,35 @@ class TopicManagement{
       print(e);
     });
   }
+
+  /// this method is to store new question reply
+  /// @param: documentId: current document id
+  storeNewReply(String content, String tabText, String documentId){
+    FirebaseAuth.instance.currentUser().then((user){
+      Firestore.instance.collection('users').where('uid',isEqualTo: user.uid).getDocuments()
+          .then((doc){
+        DocumentSnapshot snap = doc.documents[0];
+        Firestore.instance.document('Questions/alltopic/${tabText}/${documentId}').updateData({
+          'status': '已解决'
+        });
+        DocumentReference ref = Firestore.instance.document('Questions/alltopic/${tabText}/${documentId}');
+
+        Firestore.instance.collection('users').document(snap.documentID).collection('Answers').add({
+          'refreply': ref,
+        });
+
+        Firestore.instance.collection('Questions/alltopic/${tabText}/${documentId}/reply').add({
+          'content': content,
+          //'photoUrl': user.photoUrl,
+          'photoUrl': snap['photoUrl'],
+          'username': user.displayName,
+          'uid': user.uid,
+          'speciality': snap['speciality'],
+          'technicaltitle': snap['technicalTitle']
+        });
+      });
+
+    });
+
+  }
 }
