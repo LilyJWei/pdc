@@ -45,6 +45,24 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin{
    }
    return time;
  }
+ String userId;
+ String docId;
+
+ @override
+ void initState() {
+   super.initState();
+   FirebaseAuth.instance.currentUser().then((user){
+     userId = user.uid;
+     Firestore.instance.collection('users').where('uid', isEqualTo: userId)
+         .getDocuments().then((docs){
+       setState(() {
+         docId = docs.documents[0].documentID;
+       });
+     });
+   }).catchError((e){
+     print(e);
+   });
+ }
 
   @override
   Widget build(BuildContext context) {
@@ -104,6 +122,25 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin{
                                           'view': freshSnap['view'] + 1
                                         });
                                       });
+                                      Firestore.instance.collection('users').document(docId).collection('HistoryTopic')
+                                      .where('reftopic',isEqualTo: document.reference).getDocuments().then((refDoc){
+                                        if(refDoc.documents.length == 0){
+                                          Firestore.instance.collection('users/${docId}/HistoryTopic').add({
+                                            'reftopic': document.reference,
+                                            'time' : Timestamp.now(),
+                                          });
+                                        }
+                                        else{
+                                          DocumentSnapshot snap = refDoc.documents[0];
+                                          Firestore.instance.runTransaction((transaction) async {
+                                            DocumentSnapshot freshSnap = await transaction.get(snap.reference);
+                                            await transaction.update(freshSnap.reference, {
+                                              'time': Timestamp.now(),
+                                            });
+                                          });
+                                        }
+                                      });
+
                                     },
                                         padding: EdgeInsets.only(left: 2),
                                         child: Text(
@@ -121,7 +158,7 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin{
                                             flex: 2,
                                             child: CircleAvatar(
                                               backgroundImage:NetworkImage(document['photoUrl']),
-                                              radius: 15.0,
+                                              radius: 17.0,
                                             )
                                         ),
                                         Expanded(

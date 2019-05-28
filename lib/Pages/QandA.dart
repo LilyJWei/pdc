@@ -24,9 +24,26 @@ class _QandAPageState extends State<QandAPage> with AutomaticKeepAliveClientMixi
     new Tab(text: "妇产科"),
     new Tab(text: "其他"),
   ];
+  String userId;
+  String docId;
 
   @override
-  // TODO: implement wantKeepAlive
+  void initState() {
+    super.initState();
+    FirebaseAuth.instance.currentUser().then((user){
+      userId = user.uid;
+      Firestore.instance.collection('users').where('uid', isEqualTo: userId)
+          .getDocuments().then((docs){
+        setState(() {
+          docId = docs.documents[0].documentID;
+        });
+      });
+    }).catchError((e){
+      print(e);
+    });
+  }
+
+  @override
   bool get wantKeepAlive => true;
 
   @override
@@ -99,16 +116,35 @@ class _QandAPageState extends State<QandAPage> with AutomaticKeepAliveClientMixi
                                         child: FlatButton(
                                           padding: EdgeInsets.only(left: 0),
                                           onPressed: (){
+                                            Firestore.instance.collection('users').document(docId).collection('HistoryQuestion')
+                                                .where('refquestion',isEqualTo: document.reference).getDocuments().then((refDoc){
+                                              if(refDoc.documents.length == 0){
+                                                Firestore.instance.collection('users/${docId}/HistoryQuestion').add({
+                                                  'refquestion': document.reference,
+                                                  'time': Timestamp.now(),
+                                                });
+                                              }
+                                              else{
+                                                DocumentSnapshot snap = refDoc.documents[0];
+                                                Firestore.instance.runTransaction((transaction) async {
+                                                  DocumentSnapshot freshSnap = await transaction.get(snap.reference);
+                                                  await transaction.update(freshSnap.reference, {
+                                                    'time': Timestamp.now(),
+                                                  });
+                                                });
+                                              }
+                                            });
                                             FirebaseAuth.instance.currentUser().then((user){
                                               Firestore.instance.collection('users').where('uid',isEqualTo: user.uid)
                                                   .getDocuments().then((doc){
                                                  DocumentSnapshot snap = doc.documents[0];
                                                  if(snap['avatar'] == 'doctor'){
                                                    Navigator.of(context).push(MaterialPageRoute
-                                                     (builder: (context) => QuestionDetailDoctorPage(snap: document, tabs: tab))) ;
+                                                     (builder: (context) => QuestionDetailDoctorPage(snap: document, tabs: tab.text))) ;
                                                  }else{
                                                    Navigator.of(context).push(
-                                                       MaterialPageRoute(builder: (context) => QuestionDetailPage(snap: document, tabs: tab.text))) ;
+                                                       MaterialPageRoute(builder: (context) => QuestionDetailPage(snap: document, tabs: tab.text)));
+
                                                  }
                                               });
                                             });

@@ -18,6 +18,7 @@ class UserManagement {
      'photoUrl': user.photoUrl,
      'gender': gender,
      'avatar': avatar,
+     'intro' :'无',
    }).then((value){
      Navigator.of(context).pop();
      Navigator.of(context).pushReplacementNamed('/LoginPage');
@@ -123,5 +124,53 @@ class UserManagement {
 
       });
     });
+  }
+
+  likeComment(DocumentSnapshot commentSnap){
+    FirebaseAuth.instance.currentUser().then((user){
+      Firestore.instance.collection('users').where('uid', isEqualTo: user.uid).getDocuments()
+          .then((userDoc){
+         Firestore.instance.collection('users').document(userDoc.documents[0].documentID)
+             .collection('Like').add({
+           'reflike': commentSnap.reference
+         });
+      });
+    });
+  }
+
+  unlikeComment(DocumentSnapshot commentSnap){
+    FirebaseAuth.instance.currentUser().then((user){
+      Firestore.instance.collection('users').where('uid', isEqualTo: user.uid).getDocuments()
+          .then((userDoc){
+        Firestore.instance.collection('users').document(userDoc.documents[0].documentID)
+            .collection('Like').where('reflike', isEqualTo: commentSnap.reference).getDocuments()
+            .then((likeDoc){
+           if(likeDoc.documents.length == 0){
+             return;
+           }else{
+             Firestore.instance.document('users/${userDoc.documents[0].documentID}/Like/${likeDoc.documents[0].documentID}')
+                 .delete();
+             return;
+           }
+        });
+      });
+    });
+  }
+
+  updateProfilePic(picUrl) {
+    var userInfo = new UserUpdateInfo();
+    userInfo.photoUrl = picUrl;
+    FirebaseAuth.instance.currentUser().then((user){
+      user.updateProfile(userInfo).then((val){
+        Firestore.instance.collection('users').where('uid',isEqualTo: user.uid)
+            .getDocuments().then((docs){
+           Firestore.instance.document('users/${docs.documents[0].documentID}')
+           .updateData({
+             'photoUrl': picUrl
+           });
+        });
+      });
+    });
+
   }
 }

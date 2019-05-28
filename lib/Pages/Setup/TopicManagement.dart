@@ -45,7 +45,14 @@ class TopicManagement{
       'time': time,
       'uid': uid,
       'username':userName
-    }).then((value){
+    }).then((DocumentReference ref){
+      Firestore.instance.collection('users').where('uid', isEqualTo: uid).getDocuments()
+      .then((userDoc){
+        Firestore.instance.collection('users').document(userDoc.documents[0].documentID)
+            .collection('Comment').add({
+          'refcomment': ref,
+        });
+      });
        var document = Firestore.instance.collection('Topic').document('alltopic').collection(tabText)
           .document(documentId);
       Firestore.instance.runTransaction((transaction) async {
@@ -58,6 +65,23 @@ class TopicManagement{
     }).catchError((e){
       print(e);
     });
+  }
+
+  deleteComment(DocumentReference refComment){
+    FirebaseAuth.instance.currentUser().then((user){
+      Firestore.instance.collection('users').where('uid',isEqualTo: user.uid).getDocuments()
+          .then((userDoc){
+         Firestore.instance.collection('users').document(userDoc.documents[0].documentID)
+         .collection('Comment').where('refcomment',isEqualTo: refComment).getDocuments()
+         .then((refDoc){
+           if(refDoc.documents.length != 0){
+             Firestore.instance.document('users/${userDoc.documents[0].documentID}/Comment/'
+                 '${refDoc.documents[0].documentID}').delete();
+           }
+         });
+      });
+    });
+    Firestore.instance.document(refComment.path).delete();
   }
 
   storeNewQuestion(String type, String tab, String title, String content,context) async{
@@ -82,7 +106,11 @@ class TopicManagement{
       'uid': uid,
       'username': userName,
       'status': '待解决'
-    }).then((value){
+    }).then((DocumentReference ref){
+      Firestore.instance.collection('users').document(snapshot.documents[0].documentID)
+      .collection('Question').add({
+        'refquestion': ref,
+      });
       Navigator.of(context).pop();
       //Navigator.of(context).pushReplacementNamed('/BottomNavigationBarPage');
 

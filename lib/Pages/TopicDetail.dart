@@ -60,8 +60,10 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                         itemCount: length + 1,
                         itemBuilder: (BuildContext context, int index) {
                           DocumentSnapshot document;
+                          DocumentReference refDoc;
                           if(index >= 1){
-                            document = snapshot.data.documents[ index - 1];
+                            document = snapshot.data.documents[index - 1];
+                            refDoc = document.reference;
                           }
                           else{
                             document = null;
@@ -137,24 +139,41 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                                                     ),
                                                     Expanded(
                                                       flex: 2,
-                                                      child: index > 0? IconButton(icon: Icon(Icons.thumb_up), iconSize: 15,
-                                                          color: _likeIconColor(index, isLike),
-                                                          onPressed: (){
-                                                           Firestore.instance.runTransaction((transaction) async {
-                                                             DocumentSnapshot freshSnap = await transaction.get(document.reference);
-                                                             if(document['like'] == true){
-                                                               await transaction.update(freshSnap.reference, {
-                                                                 'like': false
-                                                               });
-                                                             }else{
-                                                               await transaction.update(freshSnap.reference, {
-                                                                 'like': true
-                                                               });
-                                                             }
+                                                      child: StreamBuilder(
+                                                        stream: Firestore.instance.collection('users').document(docId).collection('Like')
+                                                          .where('reflike',isEqualTo: refDoc).snapshots(),
+                                                        builder: (context, snapshot) {
+                                                          if(!snapshot.hasData){
+                                                            return Center(
+                                                              child: Text(' '),
+                                                            );
+                                                          }else{
+                                                            if(snapshot.data.documents.length == 0){
+                                                              isLike = false;
+                                                            }else{
+                                                              isLike = true;
+                                                            }
+                                                            return Container(
+                                                              child: index > 0? IconButton(icon: Icon(Icons.thumb_up), iconSize: 15,
+                                                                  color: _likeIconColor(index, isLike),
+                                                                  onPressed: (){
+                                                                    if(isLike == false){
+                                                                      UserManagement().likeComment(document);
+                                                                      setState(() {
+                                                                        isLike = true;
+                                                                      });
+                                                                    }else{
+                                                                      UserManagement().unlikeComment(document);
+                                                                      setState(() {
+                                                                        isLike = false;
+                                                                      });
+                                                                    }
+                                                                  }): Text(" "),
+                                                            );
+                                                          }
 
-                                                           });
-
-                                                      }): Text(" ")
+                                                        }
+                                                      )
                                                     )
                                                   ],
                                                 ),

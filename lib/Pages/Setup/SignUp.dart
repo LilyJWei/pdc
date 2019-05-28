@@ -284,7 +284,6 @@ class _SignUpPageState extends State<SignUpPage> {
         }else{
           gender = 'undifine';
         }
-
           var userUpdateInfo = new UserUpdateInfo();
           userUpdateInfo.displayName = _userName;
           userUpdateInfo.photoUrl = _photoUrl;

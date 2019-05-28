@@ -18,8 +18,23 @@ class _FollowPageState extends State<FollowPage> {
     new Tab(text: "帖子"),
     new Tab(text: "医生"),
   ];
-
-
+  String userId;
+  String docId;
+  @override
+  void initState() {
+    super.initState();
+    FirebaseAuth.instance.currentUser().then((user){
+      userId = user.uid;
+      Firestore.instance.collection('users').where('uid', isEqualTo: userId)
+          .getDocuments().then((docs){
+        setState(() {
+          docId = docs.documents[0].documentID;
+        });
+      });
+    }).catchError((e){
+      print(e);
+    });
+  }
 
   Widget topic(BuildContext context, int index, DocumentSnapshot currentDoc, String tabText){
     return new Column(
@@ -60,7 +75,7 @@ class _FollowPageState extends State<FollowPage> {
                     flex: 2,
                     child: CircleAvatar(
                       backgroundImage: NetworkImage(currentDoc['photoUrl']),
-                      radius: 15.0,
+                      radius: 17.0,
                     )
                 ),
                 Expanded(
@@ -137,24 +152,8 @@ class _FollowPageState extends State<FollowPage> {
       ],
     );
   }
-  String userId;
-  String docId;
 
-  @override
-  void initState() {
-    super.initState();
-    FirebaseAuth.instance.currentUser().then((user){
-      userId = user.uid;
-      Firestore.instance.collection('users').where('uid', isEqualTo: userId)
-          .getDocuments().then((docs){
-            setState(() {
-              docId = docs.documents[0].documentID;
-            });
-      });
-    }).catchError((e){
-      print(e);
-    });
-  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(

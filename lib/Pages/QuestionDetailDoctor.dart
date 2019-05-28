@@ -7,7 +7,7 @@ import 'package:pdc/Pages/Setup/crud.dart';
 class QuestionDetailDoctorPage extends StatefulWidget {
   const QuestionDetailDoctorPage({Key key, this.snap,this.tabs}) : super(key: key);
   final DocumentSnapshot snap;
-  final Tab tabs;
+  final String tabs;
   @override
   _QuestionDetailDoctorPageState createState() => _QuestionDetailDoctorPageState();
 }
@@ -17,7 +17,7 @@ class _QuestionDetailDoctorPageState extends State<QuestionDetailDoctorPage> {
   @override
   Widget build(BuildContext context) {
     //当前问题的类别
-    String tabText = widget.tabs.text;
+    String tabText = widget.tabs;
     DocumentSnapshot snap = widget.snap;
     String docId = snap.documentID;
     return Scaffold(
