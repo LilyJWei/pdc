@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pdc/Pages/PublishTopic.dart';
+import 'package:pdc/Pages/Search.dart';
 
 class SearchBar extends StatefulWidget {
   @override
@@ -34,7 +35,11 @@ class _SearchBarState extends State<SearchBar> {
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
                                     hintText: "Search",
-                                    hintStyle: TextStyle(color: Colors.black26))
+                                    hintStyle: TextStyle(color: Colors.black26)),
+                              onTap: (){
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>
+                                  SearchPage()));
+                              },
                             ),
 
                           ),],

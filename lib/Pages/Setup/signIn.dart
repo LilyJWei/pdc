@@ -151,7 +151,24 @@ class _LoginPageState extends State<LoginPage> {
           _loading = !_loading;
         });
       }catch(e){
-        print(e);
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('提示'),
+              content: Text((e.message)),
+              actions: <Widget>[
+                new FlatButton(
+                  child: new Text("确定"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ));
+        setState(() {
+          _loading = !_loading;
+        });
+        return;
       }
 
     }

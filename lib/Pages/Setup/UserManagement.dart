@@ -27,6 +27,28 @@ class UserManagement {
      print(e);
    });
   }
+
+  storeNewDoctor(user, context, String avatar,String gender, String speciality, String technicaltitle, String workField ){
+    Firestore.instance.collection('users').add({
+      'email': user.email,
+      'displayName': user.displayName,
+      'uid' : user.uid,
+      'photoUrl': user.photoUrl,
+      'gender': gender,
+      'avatar': avatar,
+      'intro' :'无',
+      'speciality': speciality,
+      'technicaltitle':technicaltitle,
+      'workfield':workField
+    }).then((value){
+      Navigator.of(context).pop();
+      Navigator.of(context).pushReplacementNamed('/LoginPage');
+
+    }).catchError((e){
+      print(e);
+    });
+  }
+
   Widget handleAuth(){
     return new StreamBuilder(
       stream: FirebaseAuth.instance.onAuthStateChanged,

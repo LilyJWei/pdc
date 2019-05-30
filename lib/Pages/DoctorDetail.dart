@@ -85,7 +85,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
                         ),
                         Container(
                           margin: EdgeInsets.only(left: 10, right: 35, top: 40),
-                          child: Text('职称：${widget.doctorSnap['technicalTitle']}',
+                          child: Text('职称：${widget.doctorSnap['technicaltitle']}',
                             style: TextStyle(color: Color.fromARGB(255, 101, 104, 127),fontSize: 12),),
                         )
                       ],

@@ -24,7 +24,39 @@ class _SignUpPageState extends State<SignUpPage> {
   int groupValue;
   int genderValue;
   bool _loading;
+  String _speciality, _technicaltitle;
+  var selectItemValue;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  List<DropdownMenuItem> generateItemList() {
+    List<DropdownMenuItem> items = new List();
+    DropdownMenuItem item1 = new DropdownMenuItem(
+        value: '内科', child: new Text('内科'));
+    DropdownMenuItem item2 = new DropdownMenuItem(
+        value: '外科', child: new Text('外科'));
+    DropdownMenuItem item3 = new DropdownMenuItem(
+        value: '五官科', child: new Text('五官科'));
+    DropdownMenuItem item4 = new DropdownMenuItem(
+        value: '儿科', child: new Text('儿科'));
+    DropdownMenuItem item5 = new DropdownMenuItem(
+        value: '皮肤科', child: new Text('皮肤科'));
+    DropdownMenuItem item6 = new DropdownMenuItem(
+        value: '中医科', child: new Text('中医科'));
+    DropdownMenuItem item7 = new DropdownMenuItem(
+        value: '妇产科', child: new Text('妇产科'));
+    DropdownMenuItem item8 = new DropdownMenuItem(
+        value: '其他', child: new Text('其他'));
+    items.add(item1);
+    items.add(item2);
+    items.add(item3);
+    items.add(item4);
+    items.add(item5);
+    items.add(item6);
+    items.add(item7);
+    items.add(item8);
+    return items;
+  }
+
 
   Future getImage() async {
     var tempImage = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -33,7 +65,7 @@ class _SignUpPageState extends State<SignUpPage> {
     });
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
     final StorageReference firebaseStorageRef =
-    FirebaseStorage.instance.ref().child('image_${user.uid}.jpg');
+    FirebaseStorage.instance.ref().child('image_${Random().nextInt(10000)}.jpg');
     final StorageUploadTask task =
     firebaseStorageRef.putFile(sampleImage);
     StorageTaskSnapshot snapshot = await task.onComplete;
@@ -42,6 +74,8 @@ class _SignUpPageState extends State<SignUpPage> {
       _photoUrl = url;
     });
   }
+
+
 
   @override
   void initState() {
@@ -159,7 +193,109 @@ class _SignUpPageState extends State<SignUpPage> {
                                       fontSize: 16,fontWeight: FontWeight.w500)),
                               value: 1,
                               groupValue: groupValue,
-                              onChanged: (int e)=>updateGroupValue(e),
+//                              onChanged: (int e)=>updateGroupValue(e),
+                              onChanged: (int e){
+                                updateGroupValue(e);
+                                showDialog(
+                                    context: context,
+                                    builder: (context){
+
+                                      return AlertDialog(
+                                        title: Text('输入信息'),
+                                        content: Container(
+                                          child: Column(
+                                            children: <Widget>[
+                                              Container(
+                                                margin: EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 0),
+                                                child: Text('请输入专长：', style: TextStyle(
+                                                  color:  Color.fromARGB(255, 69, 69, 92),fontSize: 18,
+                                                )),
+                                              ),
+                                              Theme(
+                                                data: new ThemeData(primaryColor: Color.fromARGB(255, 240, 123, 135), hintColor:Color.fromARGB(255, 249, 223, 221) ),
+                                                child: TextField(
+                                                  maxLines: 1,
+                                                  decoration: InputDecoration(
+                                                      contentPadding: EdgeInsets.all(10.0),
+                                                      border: OutlineInputBorder(
+                                                        borderRadius: BorderRadius.circular(10.0),
+                                                      )),
+                                                  onChanged: (value){
+                                                    setState(() {
+                                                      _speciality = value;
+                                                    });
+                                                  },
+                                                ),
+                                              ),
+                                              Container(
+                                                margin: EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 0),
+                                                child: Text('请输入职称：', style: TextStyle(
+                                                  color:  Color.fromARGB(255, 69, 69, 92),fontSize: 18,
+                                                )),
+                                              ),
+                                              Theme(
+                                                data: new ThemeData(primaryColor: Color.fromARGB(255, 240, 123, 135), hintColor:Color.fromARGB(255, 249, 223, 221) ),
+                                                child: TextField(
+                                                  maxLines: 1,
+                                                  decoration: InputDecoration(
+                                                      contentPadding: EdgeInsets.all(10.0),
+                                                      border: OutlineInputBorder(
+                                                        borderRadius: BorderRadius.circular(10.0),
+                                                      )),
+                                                  onChanged: (value){
+                                                    setState(() {
+                                                      _technicaltitle = value;
+                                                    });
+                                                  },
+                                                ),
+                                              ),
+                                              Container(
+                                                margin: EdgeInsets.only(left: 30,top: 5,bottom: 5),
+                                                child: Text(
+                                                  "请选择科室：",
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(color: Color.fromARGB(255, 69, 69, 92),fontSize: 16),
+                                                ),
+                                              ),
+                                              StatefulBuilder(
+                                                builder:  (context, StateSetter setState) {
+                                                  return Container(
+                                                    margin: EdgeInsets.only(left: 30),
+                                                    child: new DropdownButton(
+                                                      elevation: 2,
+                                                      hint: new Text('     选择职业科室      '),
+                                                      value: selectItemValue,
+                                                      items: generateItemList(),
+                                                      onChanged: (T){
+                                                        setState(() {
+                                                          selectItemValue = T;
+                                                        });
+                                                      },
+                                                    ),
+                                                  );
+                                                },
+
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        actions: <Widget>[
+                                          new FlatButton(
+                                            child: new Text("取消"),
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                          new FlatButton(
+                                            child: new Text("确定"),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    });
+                              },
                               activeColor: Color.fromARGB(255, 240, 123, 135)
                           ),
                         ),
@@ -233,7 +369,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               borderRadius: BorderRadius.all(Radius.circular(6.0))),
                           color: Color.fromARGB(255, 249, 223, 221),
                           onPressed: (){
-                            signUp(_photoUrl,groupValue,genderValue);
+                            signUp(_photoUrl,groupValue,genderValue,selectItemValue);
 
                           },
                           child: Text('注册',style: TextStyle(
@@ -252,7 +388,7 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
 
-  Future<void> signUp(String _photoUrl, int groupValue, int genderValue) async{
+  Future<void> signUp(String _photoUrl, int groupValue, int genderValue, String selectItemValue) async{
     if(_formKey.currentState.validate()){
       setState(() {
         _loading = !_loading;
@@ -268,6 +404,26 @@ class _SignUpPageState extends State<SignUpPage> {
         if(groupValue != null){
           if(groupValue == 1){
             avatar = 'doctor';
+            if(_speciality == null || _technicaltitle == null || selectItemValue == null){
+              showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text('提示'),
+                    content: Text(('请正确输入全部内容')),
+                    actions: <Widget>[
+                      new FlatButton(
+                        child: new Text("确定"),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  ));
+              setState(() {
+                _loading = !_loading;
+              });
+              return;
+            }
           }else{
             avatar = 'normal';
           }
@@ -289,7 +445,12 @@ class _SignUpPageState extends State<SignUpPage> {
           userUpdateInfo.photoUrl = _photoUrl;
           user.updateProfile(userUpdateInfo).then((user){
             FirebaseAuth.instance.currentUser().then((user){
-              UserManagement().storeNewUser(user, context, avatar,gender );
+              if(avatar == 'normal'){
+                UserManagement().storeNewUser(user, context, avatar,gender );
+              }else{
+                UserManagement().storeNewDoctor(user, context, avatar, gender, _speciality, _technicaltitle, selectItemValue);
+              }
+
             }).catchError((e){
               print(e);
             });
@@ -302,6 +463,25 @@ class _SignUpPageState extends State<SignUpPage> {
         //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
       }catch(e){
         print(e.message);
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('提示'),
+              content: Text((e.message)),
+              actions: <Widget>[
+                new FlatButton(
+                  child: new Text("确定"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ));
+        setState(() {
+          _loading = !_loading;
+        });
+        return;
+
       }
 
     }

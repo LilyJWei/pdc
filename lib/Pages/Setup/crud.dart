@@ -30,6 +30,25 @@ class CrudMethods {
 
     }
 
+  getQues() async{
+    FirebaseUser user  = await FirebaseAuth.instance.currentUser();
+    QuerySnapshot snapshot = await Firestore.instance.collection('users')
+        .where('uid',isEqualTo: user.uid)
+        .getDocuments();
+    return  Firestore.instance.collection('users').document(snapshot.documents[0].documentID)
+        .collection('HistoryQuestion').getDocuments();
+  }
+
+  getRec() async{
+    FirebaseUser user  = await FirebaseAuth.instance.currentUser();
+    QuerySnapshot snapshot = await Firestore.instance.collection('users')
+        .where('uid',isEqualTo: user.uid)
+        .getDocuments();
+    return  Firestore.instance.collection('users').document(snapshot.documents[0].documentID)
+        .collection('HistoryTopic').getDocuments();
+
+  }
+
     getFollow(String documentId) async{
       FirebaseUser user  = await FirebaseAuth.instance.currentUser();
        QuerySnapshot doc = await Firestore.instance.collection('users').where('uid', isEqualTo: user.uid).getDocuments();
@@ -83,6 +102,15 @@ class CrudMethods {
       });
     });
     return documentSnapshot;
+  }
+
+
+  searchByName(String searchField) {
+  return Firestore.instance
+      .collection('Topic').document('alltopic').collection('外科')
+      .where('searchKey',
+  isEqualTo: searchField.substring(0, 1))
+      .getDocuments();
   }
 
 

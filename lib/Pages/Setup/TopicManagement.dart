@@ -22,7 +22,8 @@ class TopicManagement{
       'title' : title,
       'uid': uid,
       'username': userName,
-      'view': 0
+      'view': 0,
+      //'searchKey': title.substring(0,1),
     }).then((value){
       Navigator.of(context).pop();
       Navigator.of(context).pushReplacementNamed('/BottomNavigationBarPage');
@@ -75,6 +76,8 @@ class TopicManagement{
          .collection('Comment').where('refcomment',isEqualTo: refComment).getDocuments()
          .then((refDoc){
            if(refDoc.documents.length != 0){
+//             DocumentSnapshot documentSnapshot = refDoc.documents[0];
+//             Firestore.instance.document(documentSnapshot['refcomment'].path).get().then((comm))
              Firestore.instance.document('users/${userDoc.documents[0].documentID}/Comment/'
                  '${refDoc.documents[0].documentID}').delete();
            }
@@ -137,12 +140,12 @@ class TopicManagement{
 
         Firestore.instance.collection('Questions/alltopic/${tabText}/${documentId}/reply').add({
           'content': content,
-          //'photoUrl': user.photoUrl,
-          'photoUrl': snap['photoUrl'],
+          'photoUrl': user.photoUrl,
+          //'photoUrl': snap['photoUrl'],
           'username': user.displayName,
           'uid': user.uid,
           'speciality': snap['speciality'],
-          'technicaltitle': snap['technicalTitle']
+          'technicaltitle': snap['technicaltitle']
         });
       });
 
