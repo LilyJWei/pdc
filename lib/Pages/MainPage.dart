@@ -306,7 +306,6 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin{
                           return new ListView.builder(
                             itemCount: snapshot.data.documents.length,
                             itemBuilder: (BuildContext context, int index) {
-
                               DocumentSnapshot document = snapshot.data.documents[index];
                               return new Container(
                                 height: 160,
